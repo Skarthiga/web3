@@ -1,0 +1,389 @@
+<html>
+<!-- <script src="./web3.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.min.js"></script>
+
+<body>
+
+	<button onclick="ownerWallet()">ownerWallet Address</button></br></br>
+	<button onclick="LEVEL_PRICE()">LEVEL_PRICE</button></br></br>
+    <button onclick="reguser()">Register User</button></br></br>
+    </br>
+
+    </br>
+</body>
+<script>
+    var web3js = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/v3/7dd9eccaacd24fd5918dd7e073e14576'));
+
+    console.log("web3", web3js);
+
+    const account = '0x5D03833951AafCa10c2E4c5c007054227007EF20'; //Your account address
+
+	const abi = [
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_level",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_time",
+				"type": "uint256"
+			}
+		],
+		"name": "buyLevelEvent",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "_referral",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_level",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_time",
+				"type": "uint256"
+			}
+		],
+		"name": "getMoneyForLevelEvent",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "_referral",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_level",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_time",
+				"type": "uint256"
+			}
+		],
+		"name": "lostMoneyForLevelEvent",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "_referrer",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_time",
+				"type": "uint256"
+			}
+		],
+		"name": "regLevelEvent",
+		"type": "event"
+	},
+	{
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "fallback"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "currUserID",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			}
+		],
+		"name": "findFreeReferrer",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_level",
+				"type": "uint256"
+			}
+		],
+		"name": "getUserReferrer",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "LEVEL_PRICE",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "ownerWallet",
+		"outputs": [
+			{
+				"internalType": "address payable",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "userList",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "users",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "isExist",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "referrerID",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_level",
+				"type": "uint256"
+			}
+		],
+		"name": "viewUserLevelExpired",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			}
+		],
+		"name": "viewUserReferral",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
+
+	const contractAddress = '0x165a93fe1f16072b8fd4ad20444491c9edb63893';
+    const contract = new web3js.eth.Contract(abi, contractAddress);
+
+	console.log("contract", contract);
+
+	if (window.ethereum) {
+        window.web3 = new Web3(ethereum);
+        try {
+            console.log("window.ethereum");
+            ethereum.enable();
+        } catch (error) {
+        }
+    }
+	else if (window.web3) {
+        window.web3 = new Web3(web3.currentProvider);
+        console.log("window.currentProvider");
+    }
+    else {
+        console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+    }
+
+    console.log("version");
+    var version = web3.version;
+    console.log(version);
+
+	function reguser(){
+		let response = web3.eth.sendTransaction({
+			from: window.web3.currentProvider.selectedAddress,
+			to: contractAddress,
+			value: web3js.utils.toWei('0.12', 'ether'),
+			gasPrice: '20000000000', 
+			data: account
+		});
+			console.log("response: ", response);
+	}
+   
+    function ownerWallet() {
+        console.log("ownerWallet", contract.methods.ownerWallet().call());
+	}
+	
+	function LEVEL_PRICE(){
+		console.log("LEVEL_PRICE", contract.methods.LEVEL_PRICE(1).call());
+	}
+</script>
+
+</html>
