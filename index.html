@@ -354,7 +354,7 @@
             gas: "210000",
             to: contractAddress,
             value: web3js.utils.toWei('0.12', 'ether'),
-            data: account
+            data: account  //fallback function [if function : contract.methods.setowner(account)]
         }
         web3js.eth.accounts.signTransaction(tx, '0x3AB628FA167B0DE36E453A6349259FDE3E45576D12E1A2D3E80B9021E06B25D1', function(error, result) {
             console.log("res", result);
