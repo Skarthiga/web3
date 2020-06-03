@@ -1,5 +1,5 @@
 <html>
-<!-- <script src="./web3.min.js"></script> --> 
+<!-- <script src="./web3.min.js"></script> -->
 <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.min.js"></script>
 
 <body>
@@ -7,6 +7,7 @@
 	<button onclick="ownerWallet()">ownerWallet Address</button></br></br>
 	<button onclick="LEVEL_PRICE()">LEVEL_PRICE</button></br></br>
     <button onclick="reguser()">Register User</button></br></br>
+    
     </br>
 
     </br>
@@ -346,45 +347,32 @@
 
 	console.log("contract", contract);
 
-	if (window.ethereum) {
-        window.web3 = new Web3(ethereum);
-        try {
-            console.log("window.ethereum");
-            ethereum.enable();
-        } catch (error) {
+    function reguser(){
+        var tx = {
+            from: "0x5F782e4056DE32D9119e0D9eBf9fdbdC51d6500e", //Eth usr add
+            gasPrice: "20000000000",
+            gas: "210000",
+            to: contractAddress,
+            value: web3js.utils.toWei('0.12', 'ether'),
+            data: account  //fallback function [if function : contract.methods.setowner(account)]
         }
-    }
-	else if (window.web3) {
-        window.web3 = new Web3(web3.currentProvider);
-        console.log("window.currentProvider");
-    }
-    else {
-        console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
-    }
+        web3js.eth.accounts.signTransaction(tx, '0x3AB628FA167B0DE36E453A6349259FDE3E45576D12E1A2D3E80B9021E06B25D1', function(error, result) {
+            console.log("res", result);
+            console.log("error", error);
+            web3js.eth.sendSignedTransaction(result["rawTransaction"], (err, txHash) => {
+                console.log('err:', err, 'txHash:', txHash)
+            })
 
-    console.log("version");
-    var version = web3.version;
-    console.log(version);
-
-   //fallback function
-	function reguser(){
-		let response = web3.eth.sendTransaction({
-			from: window.web3.currentProvider.selectedAddress,
-			to: contractAddress,
-			value: web3js.utils.toWei('0.12', 'ether'),
-			gasPrice: '20000000000', 
-			data: account
-		});
-			console.log("response: ", response);
-	}
-   
-    //view function
+        })
+    }
+    
     function ownerWallet() {
         console.log("ownerWallet", contract.methods.ownerWallet().call());
 	}
 	
 	function LEVEL_PRICE(){
 		console.log("LEVEL_PRICE", contract.methods.LEVEL_PRICE(1).call());
+		
 	}
 </script>
 
